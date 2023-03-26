@@ -29,14 +29,10 @@ async function getGoogleSheet(auth) {
 // --- helper functions ---
 
 //fetches data from the spreadsheet
-app.get('/datafetch', async (req, res) => {
+app.get('/allData', async (req, res) => {
   const auth = getAuth();
   const googleSheet = await getGoogleSheet(auth);
 
-  // const getMetaData = await googleSheet.spreadsheets.get({
-  //   auth,
-  //   spreadsheetId,
-  // });
 
   const getSheetData = await googleSheet.spreadsheets.values.get({
     auth,
@@ -49,6 +45,8 @@ app.get('/datafetch', async (req, res) => {
 
 //posts data to cell
 app.post('/post', async (req, res) => {
+  const { request, name } = req.body;
+  console.log(req, req.body)
   const auth = getAuth();
   const googleSheet = await getGoogleSheet(auth);
 
