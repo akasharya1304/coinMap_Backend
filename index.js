@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const { google } = require("googleapis");
 const cors = require("cors");
+const crypto = require("crypto");
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.get("/allData", async (req, res) => {
 app.post("/post", async (req, res) => {
   const auth = getAuth();
   const googleSheet = await getGoogleSheet(auth);
+  const id = crypto.randomBytes(16).toString("hex");
 
   await googleSheet.spreadsheets.values.append({
     auth,
@@ -60,6 +62,7 @@ app.post("/post", async (req, res) => {
           req.body.amount,
           req.body.cashFlow,
           req.body.description,
+          id
         ],
       ],
     },
