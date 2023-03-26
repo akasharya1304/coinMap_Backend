@@ -1,7 +1,7 @@
-require('dotenv').config();
-const express = require('express');
-const { google } = require('googleapis');
-const cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const { google } = require("googleapis");
+const cors = require("cors");
 
 const app = express();
 
@@ -14,8 +14,8 @@ const spreadsheetId = process.env.SPREADSHEET_ID;
 // get auth token
 function getAuth() {
   const auth = new google.auth.GoogleAuth({
-    keyFile: 'coinmap-381415-9771da8c0217.json',
-    scopes: 'https://www.googleapis.com/auth/spreadsheets',
+    keyFile: "coinmap-381415-9771da8c0217.json",
+    scopes: "https://www.googleapis.com/auth/spreadsheets",
   });
   return auth;
 }
@@ -23,78 +23,83 @@ function getAuth() {
 // proccure googleSheet method
 async function getGoogleSheet(auth) {
   const client = await auth.getClient();
-  const googleSheet = google.sheets({ version: 'v4', auth: client });
+  const googleSheet = google.sheets({ version: "v4", auth: client });
   return googleSheet;
 }
 // --- helper functions ---
 
 //fetches data from the spreadsheet
-app.get('/allData', async (req, res) => {
+app.get("/allData", async (req, res) => {
   const auth = getAuth();
   const googleSheet = await getGoogleSheet(auth);
-
 
   const getSheetData = await googleSheet.spreadsheets.values.get({
     auth,
     spreadsheetId,
-    range: 'Sheet1!A:Z',
+    range: "Sheet1!A:Z",
   });
-  console.log("data Fetched")
+  console.log("data Fetched");
   res.send(getSheetData.data.values);
 });
 
 //posts data to cell
-app.post('/post', async (req, res) => {
-  const { request, name } = req.body;
-  console.log(req, req.body)
+app.post("/post", async (req, res) => {
   const auth = getAuth();
   const googleSheet = await getGoogleSheet(auth);
 
   await googleSheet.spreadsheets.values.append({
     auth,
     spreadsheetId,
-    range: 'Sheet1!A:E',
-    valueInputOption: 'USER_ENTERED',
+    range: "Sheet1!A:E",
+    valueInputOption: "USER_ENTERED",
     resource: {
-      values: [['NextJS', 'The framework of the future']],
+      values: [
+        [
+          req.body.dateValue,
+          req.body.timeValue,
+          req.body.amount,
+          req.body.cashFlow,
+          req.body.description,
+        ],
+      ],
     },
   });
 
-  res.send('Submitted Successfully',req, req.body );
+  res.send("Submitted Successfully");
 });
 
 // deletes cell data
-app.post('/delete', async (req, res) => {
+app.post("/delete", async (req, res) => {
   const auth = getAuth();
   const googleSheet = await getGoogleSheet(auth);
 
   await googleSheet.spreadsheets.values.clear({
     auth,
     spreadsheetId,
-    range: 'Sheet1!A5:B5',
+    range: "Sheet1!A5:B5",
   });
 
-  res.send('Deleted Successfully');
+  res.send("Deleted Successfully");
 });
 
 // update cell data
-app.put('/update', async (req, res) => {
+app.put("/update", async (req, res) => {
   const auth = getAuth();
   const googleSheet = await getGoogleSheet(auth);
 
   await googleSheet.spreadsheets.values.update({
     auth,
     spreadsheetId,
-    range: 'Sheet1!A2:B2',
-    valueInputOption: 'USER_ENTERED',
+    range: "Sheet1!A2:B2",
+    valueInputOption: "USER_ENTERED",
     resource: {
-      values: [['Elon', 'Make a spaceship']],
+      values: [["Elon", "Make a spaceship"]],
     },
   });
 
-  res.send('Updated Successfully');
+  res.send("Updated Successfully");
 });
 
 app.listen(3003 || process.env.PORT, () => {
-  console.log('Up and running!!');
+  console.log("Up and running!!");
 });
