@@ -53,14 +53,14 @@ app.post('/post', async (req, res) => {
   await googleSheet.spreadsheets.values.append({
     auth,
     spreadsheetId,
-    range: 'Sheet1!A2:B',
+    range: 'Sheet1!A:E',
     valueInputOption: 'USER_ENTERED',
     resource: {
       values: [['NextJS', 'The framework of the future']],
     },
   });
 
-  res.send('Submitted Successfully');
+  res.send('Submitted Successfully',req, req.body );
 });
 
 // deletes cell data
