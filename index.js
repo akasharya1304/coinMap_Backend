@@ -68,7 +68,7 @@ app.post("/post", async (req, res) => {
     },
   });
 
-  res.send("Submitted Successfully");
+  res.send(res);
 });
 
 // deletes cell data
