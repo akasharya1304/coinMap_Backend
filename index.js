@@ -68,7 +68,7 @@ app.post("/post", async (req, res) => {
     },
   });
   console.log("1 ",res,req)
-  res.send('Submitted');
+  res.json(req.body)
 });
 
 // deletes cell data
