@@ -67,8 +67,8 @@ app.post("/post", async (req, res) => {
       ],
     },
   });
-
-  res.send(googleSheet.data.values);
+  console.log("1 ",res,req)
+  res.send('Submitted');
 });
 
 // deletes cell data
