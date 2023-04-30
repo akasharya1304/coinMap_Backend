@@ -102,6 +102,46 @@ app.put("/update", async (req, res) => {
   res.send("Updated Successfully");
 });
 
+
+// OTHERS FUNCTIONS : 
+app.post("/filterMonth", async (req, res) => {
+  const auth = getAuth();
+  const googleSheet = await getGoogleSheet(auth);
+  const id = crypto.randomBytes(16).toString("hex");
+
+  const getSheetData = await googleSheet.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: "Sheet1!A:Z",
+    });
+    console.log("filter data Fetched");
+  let allData = getSheetData.data.values
+  let filterData = allData.filter(d => d.find( item => item == req.body.text) )
+  res.send(filterData)
+
+  // await googleSheet.spreadsheets.values.append({
+  //   auth,
+  //   spreadsheetId,
+  //   range: "Sheet1!A:E",
+  //   valueInputOption: "USER_ENTERED",
+  //   resource: {
+  //     values: [
+  //       [
+  //         req.body.dateValue,
+  //         req.body.timeValue,
+  //         req.body.amount,
+  //         req.body.cashFlow,
+  //         req.body.description,
+  //         id
+  //       ],
+  //     ],
+  //   },
+  // });
+  // res.sendStatus(200);
+});
+
+// END OF OTHERS FUNCTIONS :
+
 app.listen(3003 || process.env.PORT, () => {
   console.log("Up and running!!");
 });
