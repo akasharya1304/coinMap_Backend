@@ -116,7 +116,7 @@ app.post("/filterMonth", async (req, res) => {
     });
     console.log("filter data Fetched");
   let allData = getSheetData.data.values
-  let filterData = allData.filter(d => d.find( item => item == req.body.text) )
+  let filterData = allData.filter(d => d.find( item => item.includes(req.body.text)) )
   res.send(filterData)
 
   // await googleSheet.spreadsheets.values.append({
